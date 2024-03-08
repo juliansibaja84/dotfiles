@@ -1,0 +1,4 @@
+#!/bin/bash
+list=$(ls)
+echo $list | tr " " "\n" | grep -v "playlist.pl" > playlist.pl
+mpv --loop=inf --playlist=playlist.pl

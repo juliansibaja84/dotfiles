@@ -1,0 +1,27 @@
+#!/bin/bash
+
+case $1 in
+up)
+	current=$(pacmd dump-volumes | awk 'NR==1{print $8}' | sed 's/\%//')
+	[ $current -lt 100 ] && pactl set-sink-volume @DEFAULT_SINK@ +10%	
+	;;
+down)
+	pactl set-sink-volume @DEFAULT_SINK@ -10%
+	;;
+mute)
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+	isMutedVol=$(pacmd list-sinks | tr '\n' ' ' | grep -o -P '(?<=\* index).*(?=HD-Audio Generic)' | grep -o -P '(?<=muted: ).*(?= \t*current)')
+	notify-send " Volume muted: $isMutedVol"
+	exit 0
+	;;
+*)
+	echo "Usage: pass up, down or mute as parameters to set volume"
+	exit 0;
+	;;
+esac
+
+volume=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }')
+
+notify-send  " Volume $volume"
+
+exit 0

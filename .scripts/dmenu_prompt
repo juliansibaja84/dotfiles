@@ -1,0 +1,12 @@
+#!/bin/bash
+# A dmenu binary prompt script
+# Gives a dmenu prompt a labeled with $1 to perform command $2
+# For example:
+# `./dmenu_prompt "Do you want to shutdown?" "shutdown -h now"`
+# Original Script: lukas Smith
+PROMPT=$1
+COMMAND=$2
+
+if [ $(echo -e "No\nYes" | /usr/bin/dmenu -i -p "$PROMPT") == "Yes" ]; then
+	$($COMMAND)
+fi

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+ENTRIES_PATH="$HOME/.local/noteEntries/"
+
+case $1 in
+     s)      
+          ls -1v $ENTRIES_PATH
+          ;;
+     a)      
+	  numberOfFiles=$(ls -1 $ENTRIES_PATH | wc -l)
+	  newEntryID=0
+	  listOfEntries=$(ls -1v $ENTRIES_PATH) 
+	  
+	  #Get an ID for the new entry
+	  for filename in $listOfEntries  ; do
+		currentEntryID=${filename#"$ENTRIES_PATH"}
+		newEntryID="$(($newEntryID+1))"
+		if [ "$currentEntryID" -ne "$newEntryID" ]; then
+			break 
+		fi
+	  done
+	  if [ "$numberOfFiles" -eq "$newEntryID" ]; then	
+		newEntryID="$(($newEntryID+1))"
+	  fi
+
+	  echo $2 > $ENTRIES_PATH$newEntryID
+
+	  ;;
+     d)
+          rm "$ENTRIES_PATH/$2"
+          ;; 
+     e)
+          ;;
+     *)
+          ;;
+esac

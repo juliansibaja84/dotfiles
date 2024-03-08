@@ -1,0 +1,19 @@
+#!/bin/bash
+memory_used=$(free --mega | grep Mem | awk '{printf "%.1f", $3/1000}')
+memory_avail=$(free --mega | grep Mem | awk '{printf "%.1f", $2/1000}')
+memory_90p=$(echo $memory_avail | awk '{printf "%.1f", $1*0.9}')
+memory_70p=$(echo $memory_avail | awk '{printf "%.1f", $1*0.7}')
+memory_50p=$(echo $memory_avail | awk '{printf "%.1f", $1*0.5}')
+color_50="#ffca38"
+color_70="#ff7038"
+color_90="#ff3838"
+
+if (( $(echo "$memory_used < $memory_50p" | bc -l) )); then
+  echo  $memory_used
+elif (( $(echo "$memory_used < $memory_70p" | bc -l) )); then
+  echo "<span foreground='$color_50'> $memory_used</span>"
+elif (( $(echo "$memory_used < $memory_90p" | bc -l) )); then
+  echo "<span foreground='$color_70'> $memory_used</span>"
+else
+  echo "<span foreground='$color_90'> $memory_used</span>"
+fi

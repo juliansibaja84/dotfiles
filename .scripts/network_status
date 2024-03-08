@@ -1,0 +1,26 @@
+#!/bin/bash
+lanAddr=$(ip route | grep '^[0-9].*enp2s' | awk '{print $9}')
+wlanAddr=$(ip route | grep '^[0-9].*wlp4s' | awk '{print $9}')
+network_wired_icon=
+network_wireless_icon=
+network_error_icon=
+color_ok="#b4cfed"
+color_error="#ea4a56"
+
+network_ssid=$(iwgetid -r)
+
+if [ -n "$lanAddr" ]
+then
+	echo "<span foreground='$color_ok'>$network_wired_icon $lanAddr</span>"
+else 
+	if [ -n "$wlanAddr" ]
+	then
+		echo "<span foreground='$color_ok'>$network_wireless_icon $network_ssid</span>"
+	else	
+		echo "<span foreground='$color_error'>$network_error_icon No Network</span>"
+	fi
+fi
+
+exit 0
+
+

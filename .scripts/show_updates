@@ -1,0 +1,9 @@
+#!/bin/sh
+updates_n="#3892ff"
+updates_y="#ff7038"
+
+if [[ $(checkupdates) ]]; then
+	echo "<span foreground='$updates_y'></span>"	
+else
+	echo "<span foreground='$updates_n'></span>"	
+fi

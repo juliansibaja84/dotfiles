@@ -1,0 +1,5 @@
+#!/bin/bash
+
+awt=$(i3get -r -ti)
+
+echo "$awt"

@@ -1,0 +1,57 @@
+#!/bin/bash
+battery_level=$(acpi | grep -o -P '(?<=, )[0-9]*(?=%,)')
+battery_isCharging=false
+battery_icon_full=""
+battery_icon_three_quarter=""
+battery_icon_half=""
+battery_icon_quarter=""
+battery_icon_empty=""
+battery_icon=$battery_icon_full
+withCable_icon=""
+withoutCable_icon=""
+color_100="#3892ff"
+color_95="#38ff26"
+color_75="#caff38"
+color_50="#ffca38"
+color_25="#ff7038"
+color_critical="#ff3838"
+color_charging="#fffb1c"
+notification_sound=/home/monk/.local/share/notification_sounds/notification_landline.wav
+
+if [[ $(acpi | grep -o 'Charging') == 'Charging' ]]
+then
+	charging_icon="<span foreground='$color_charging'>$withCable_icon</span>"
+elif [[ $(acpi | grep -o 'Discharging') == 'Discharging' ]]
+then
+	charging_icon="<span foreground='$color_critical'>$withoutCable_icon</span>"
+	if [[ $battery_level -le 25 ]]
+	then
+		play $notification_sound 
+		notify-send "Battery Info" "<span foreground='$color_critical'>$battery_icon_full Battery low - $battery_level%</span>"
+	fi
+fi
+
+case 1 in
+$(($battery_level<= 25)))
+	battery_icon="<span foreground='$color_25'>$battery_icon_empty</span>"	
+	;;
+$(($battery_level<= 50)))
+	battery_icon="<span foreground='$color_50'>$battery_icon_half</span>"	
+	;;
+$(($battery_level<= 75)))
+	battery_icon="<span foreground='$color_75'>$battery_icon_three_quarter</span>"	
+	;;
+$(($battery_level<= 95)))
+	battery_icon="<span foreground='$color_95'>$battery_icon_full</span>"	
+	;;
+$(($battery_level<= 100)))
+	battery_icon="<span foreground='$color_100'>$battery_icon_full</span>"	
+	;;
+
+*) 
+	battery_icon="<span foreground='$color_100'>$battery_icon_full</span>"	
+  ;;
+esac
+
+echo "$charging_icon $battery_icon"
+exit 0

@@ -1,0 +1,6 @@
+#!/bin/bash
+xbacklight $1 $2
+brightness_file="/sys/class/backlight/radeon_bl0/brightness"
+brightness=$(<$brightness_file)
+brightness_percent=$((brightness*100/255))
+notify-send " Brightness : $brightness_percent%"

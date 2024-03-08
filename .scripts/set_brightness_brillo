@@ -1,0 +1,13 @@
+#!/bin/bash
+case $1 in
+up)
+	brillo -A 5 -q
+	brightness=$(printf "%.0f\n" $(brillo -G))
+  notify-send " Brightness $1: $brightness%"
+  ;;
+down)
+	brillo -U 5 -q
+	brightness=$(printf "%.0f\n" $(brillo -G))
+  notify-send " Brightness $1: $brightness%"
+	;;
+esac

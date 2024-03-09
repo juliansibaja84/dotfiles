@@ -1,47 +1,55 @@
 from powerline_shell.themes.default import DefaultColor
 
+# Xterm 256 color variables
+COLOR_WHITE = 15 # white
+COLOR_BLACK = 0 # black
+COLOR_LIGHT_GREY = 7 # light grey
+COLOR_GREY = 8 # grey
+COLOR_JOBS = 14 # Cyan
 
 
+COLOR_OK = 2 # green
+COLOR_WARN = 130 # dark orange
+COLOR_ERROR = 1 # red
 
 class Color(DefaultColor):
-    """Basic theme which only uses colors in 0-15 range"""
-    USERNAME_FG = 8   # html color: #808080
-    USERNAME_BG = 15  # html color: #ffffff
-    USERNAME_ROOT_BG = 1  # html color: #800000
+    USERNAME_FG = COLOR_GREY
+    USERNAME_BG = COLOR_WHITE
+    USERNAME_ROOT_BG = COLOR_ERROR
 
-    HOSTNAME_FG = 8  # html color: #808080
-    HOSTNAME_BG = 7  # html color: #c0c0c0
+    HOSTNAME_FG = COLOR_GREY
+    HOSTNAME_BG = COLOR_LIGHT_GREY
 
     HOME_SPECIAL_DISPLAY = False
-    PATH_BG = 8  # html color: #808080
-    PATH_FG = 7  # html color: #c0c0c0
-    CWD_FG = 15  # html color: #ffffff
-    SEPARATOR_FG = 7  # html color: #c0c0c0
+    PATH_BG = COLOR_GREY
+    PATH_FG = COLOR_LIGHT_GREY
+    CWD_FG = COLOR_WHITE
+    SEPARATOR_FG = COLOR_LIGHT_GREY
 
-    READONLY_BG = 1  # html color: #800000
-    READONLY_FG = 15  # html color: #ffffff
+    READONLY_BG = COLOR_ERROR
+    READONLY_FG = COLOR_WHITE
 
-    REPO_CLEAN_BG = 2   # html color: #008000
-    REPO_CLEAN_FG = 0   # html color: #000000
-    REPO_DIRTY_BG = 1   # html color: #800000
-    REPO_DIRTY_FG = 15  # html color: #ffffff
+    REPO_CLEAN_BG = COLOR_OK
+    REPO_CLEAN_FG = COLOR_BLACK
+    REPO_DIRTY_BG = COLOR_WARN
+    REPO_DIRTY_FG = COLOR_WHITE
 
-    JOBS_FG = 14  # html color: #ff00ff
-    JOBS_BG = 8  # html color: #808080
+    JOBS_FG = COLOR_JOBS
+    JOBS_BG = COLOR_GREY
 
-    CMD_PASSED_BG = 8  # html color: #808080
-    CMD_PASSED_FG = 15  # html color: #ffffff
-    CMD_FAILED_BG = 11  # html color: #ff0000
-    CMD_FAILED_FG = 0  # html color: #000000
+    CMD_PASSED_BG = COLOR_GREY
+    CMD_PASSED_FG = COLOR_WHITE
+    CMD_FAILED_BG = COLOR_ERROR
+    CMD_FAILED_FG = COLOR_BLACK
 
     SVN_CHANGES_BG = REPO_DIRTY_BG
     SVN_CHANGES_FG = REPO_DIRTY_FG
 
-    VIRTUAL_ENV_BG = 2  # html color: #008000
-    VIRTUAL_ENV_FG = 0  # html color: #000000
+    VIRTUAL_ENV_BG = COLOR_OK
+    VIRTUAL_ENV_FG = COLOR_BLACK
 
-    AWS_PROFILE_FG = 14  # html color: #ff00ff
-    AWS_PROFILE_BG = 8  # html color: #808080
+    AWS_PROFILE_FG = COLOR_JOBS
+    AWS_PROFILE_BG = COLOR_GREY
 
-    TIME_FG = 8  # html color: #808080
-    TIME_BG = 7  # html color: #c0c0c0
+    TIME_FG = COLOR_GREY
+    TIME_BG = COLOR_LIGHT_GREY

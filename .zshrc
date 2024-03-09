@@ -64,15 +64,6 @@ toppy() {
     history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n 21
 }
 
-cd() {
-	builtin cd "$@" && command ls --group-directories-first --color=auto -F
-}
-
-mcd () {
-    mkdir -p $1
-    cd $1
-}
-
 # alias
 alias grub-update='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias mirror-update='sudo reflector --verbose -c Indonesia -c Japan -c Singapore --sort rate --save /etc/pacman.d/mirrorlist'
@@ -80,8 +71,6 @@ alias mtar='tar -zcvf' # mtar <archive_compress>
 alias utar='tar -zxvf' # utar <archive_decompress> <file_list>
 alias z='zip -r' # z <archive_compress> <file_list>
 alias uz='unzip' # uz <archive_decompress> -d <dir>
-alias sr='source ~/.zshrc'
-alias ..="cd .."
 alias psg="ps aux | grep -v grep | grep -i -e VSZ -e" 
 alias mkdir="mkdir -p"
 alias fm='ranger'
@@ -98,9 +87,6 @@ alias lt="ls --tree"
 alias cat="bat --color always --plain"
 alias grep='grep --color=auto'
 alias v='nvim'
-alias mv='mv -v'
-alias cp='cp -vr'
-alias rm='rm -vr'
 alias ssh="kitty +kitten ssh"
 alias get_idf='. $HOME/esp/esp-idf/export.sh'
 
@@ -122,8 +108,20 @@ if [ "$TERM" != "linux" ]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/.profile
+
+# fzf on Fedora
+if [ -x "$(command -v fzf)"  ]
+then
+        source /usr/share/fzf/shell/key-bindings.zsh
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source ~/.profile
+
+# PATH
+export PATH="$PATH:/home/monk/utils/flutter/bin"
+export PATH="$PATH:/home/monk/.local/bin"
+

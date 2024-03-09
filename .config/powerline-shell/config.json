@@ -1,0 +1,20 @@
+
+{
+  "segments": [
+    "virtual_env",
+    "aws_profile",
+    "ssh",
+    "time",
+    "username",
+    "cwd",
+    "git",
+    "git_stash",
+    "jobs",
+    "svn",
+    "~/.config/powerline-shell/segments/my_root.py"
+  ],
+  "cwd": {
+    "mode": ""
+  },
+  "theme": "~/.config/powerline-shell/themes/my_default.py"
+}

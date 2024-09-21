@@ -50,7 +50,7 @@ setopt share_history          # share command history data
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#484E5B,underline"
 ZSH_THEME="agnoster"
-plugins=(git dnf pass you-should-use zsh-bat colored-man-pages zsh-syntax-highlighting zsh-autosuggestions history )
+plugins=(git pass you-should-use colored-man-pages zsh-syntax-highlighting zsh-autosuggestions history )
 
 source $ZSH/oh-my-zsh.sh
 
@@ -91,7 +91,7 @@ alias ssh="kitty +kitten ssh"
 alias get_idf='. $HOME/esp/esp-idf/export.sh'
 
 function powerline_precmd() {
-    PS1="$(powerline-shell --shell zsh $?)"
+    PS1="$(/home/monk/utils/powerline-shell/.venv/bin/powerline-shell --shell zsh $?)"
 }
 
 function install_powerline_precmd() {

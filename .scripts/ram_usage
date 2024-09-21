@@ -9,11 +9,11 @@ color_70="#ff7038"
 color_90="#ff3838"
 
 if (( $(echo "$memory_used < $memory_50p" | bc -l) )); then
-  echo  $memory_used
+  echo 󰍛 $memory_used
 elif (( $(echo "$memory_used < $memory_70p" | bc -l) )); then
-  echo "<span foreground='$color_50'> $memory_used</span>"
+  echo "<span foreground='$color_50'>󰍛 $memory_used</span>"
 elif (( $(echo "$memory_used < $memory_90p" | bc -l) )); then
-  echo "<span foreground='$color_70'> $memory_used</span>"
+  echo "<span foreground='$color_70'>󰍛 $memory_used</span>"
 else
-  echo "<span foreground='$color_90'> $memory_used</span>"
+  echo "<span foreground='$color_90'>󰍛 $memory_used</span>"
 fi

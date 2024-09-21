@@ -180,8 +180,8 @@ bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
 
 
 # Set workspaces to monitors
-set $monitor_external HDMI-0
-set $monitor_pc eDP-1-1
+set $monitor_external HDMI-1-1
+set $monitor_pc eDP-1
 
 workspace $ws1 output $monitor_external
 workspace $ws2 output $monitor_external
@@ -313,7 +313,7 @@ exec --no-startup-id xautolock -time 10 -corners --00 -locker blurlock
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 exec --no-startup-id dunst
-exec picom --config .config/awesome/theme/picom.conf
+exec picom --config .config/picom/picom.conf
 # Color palette used for the terminal ( ~/.Xresources file )
 # Colors are gathered based on the documentation:
 # https://i3wm.org/docs/userguide.html#xresources
@@ -360,7 +360,7 @@ bar {
 
 	bindsym button4 nop
 	bindsym button5 nop
-        font xft:FontAwesome 16
+  font xft:HackNerdFont 12
 	strip_workspace_numbers yes
 
     colors {

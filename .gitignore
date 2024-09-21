@@ -1,1 +1,3 @@
 *-lock.json
+.config/powerline-shell/segments/__pycache__/
+.config/powerline-shell/themes/__pycache__/

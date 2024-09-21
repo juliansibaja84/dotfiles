@@ -1,13 +1,13 @@
 #!/bin/bash
 lanAddr=$(ip route | grep '^[0-9].*enp2s' | awk '{print $9}')
-wlanAddr=$(ip route | grep '^[0-9].*wlp4s' | awk '{print $9}')
-network_wired_icon=
+wlanAddr=$(ip route | grep '^[0-9].*wlp3s' | awk '{print $9}')
+network_wired_icon=󰛳
 network_wireless_icon=
 network_error_icon=
 color_ok="#b4cfed"
 color_error="#ea4a56"
 
-network_ssid=$(iwgetid -r)
+network_ssid=$(nmcli connection show --active | grep wifi | grep -oP '^(([a-z]|[A-Z]|[0-9])* )*' | awk '{$1=$1;print}')
 
 if [ -n "$lanAddr" ]
 then

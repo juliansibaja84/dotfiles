@@ -20,10 +20,10 @@ command=network_status
 interval=2
 markup=pango
 
-[updates]
-command=show_updates
-interval=3600
-markup=pango
+# [updates]
+# command=show_updates
+# interval=3600
+# markup=pango
 
 
 [battery]

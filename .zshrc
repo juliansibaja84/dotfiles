@@ -50,7 +50,7 @@ setopt share_history          # share command history data
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#484E5B,underline"
 ZSH_THEME="agnoster"
-plugins=(git dnf pass colored-man-pages zsh-syntax-highlighting zsh-autosuggestions history )
+plugins=(git dnf pass you-should-use zsh-bat colored-man-pages zsh-syntax-highlighting zsh-autosuggestions history )
 
 source $ZSH/oh-my-zsh.sh
 

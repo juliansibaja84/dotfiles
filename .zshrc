@@ -74,9 +74,9 @@ alias uz='unzip' # uz <archive_decompress> -d <dir>
 alias psg="ps aux | grep -v grep | grep -i -e VSZ -e" 
 alias mkdir="mkdir -p"
 alias fm='ranger'
-alias pacs="pacman -Slq | fzf -m --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk \"{print \$2}\")' | xargs -ro sudo pacman -S"
-alias pars="paru -Slq | fzf -m --preview 'cat <(paru -Si {1}) <(paru -Fl {1} | awk \"{print \$2}\")' | xargs -ro  paru -S"
-alias pacr="pacman -Qq | fzf --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns"
+alias paci="sudo pacman -S"
+alias pacs="pacman -Ss"
+alias paciu="sudo pacman -Syu"
 alias p="pacman -Q | fzf"
 alias wifi="nmtui-connect"
 alias ls="exa --color=auto --icons"
@@ -89,7 +89,6 @@ alias grep='grep --color=auto'
 alias v='nvim'
 alias ssh="kitty +kitten ssh"
 alias get_idf='. $HOME/esp/esp-idf/export.sh'
-
 function powerline_precmd() {
     PS1="$(/home/monk/utils/powerline-shell/.venv/bin/powerline-shell --shell zsh $?)"
 }
@@ -107,13 +106,7 @@ if [ "$TERM" != "linux" ]; then
     install_powerline_precmd
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# fzf on Fedora
-if [ -x "$(command -v fzf)"  ]
-then
-        source /usr/share/fzf/shell/key-bindings.zsh
-fi
+source <(fzf --zsh)
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -124,4 +117,13 @@ source ~/.profile
 # PATH
 export PATH="$PATH:/home/monk/utils/flutter/bin"
 export PATH="$PATH:/home/monk/.local/bin"
+export PATH="$PATH:/home/monk/.scripts"
 
+## PYTHON ENVS
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+## ENV VARS
+export RANGER_LOAD_DEFAULT_RC=false
+export CHROME_EXECUTABLE=/usr/bin/chromium

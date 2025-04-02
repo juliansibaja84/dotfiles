@@ -1,6 +1,6 @@
 #!/bin/bash
-lanAddr=$(ip route | grep '^[0-9].*enp2s' | awk '{print $9}')
-wlanAddr=$(ip route | grep '^[0-9].*wlp3s' | awk '{print $9}')
+lanAddr=$(ip route | grep '^[0-9].*enp14s0' | awk '{print $9}')
+wlanAddr=$(ip route | grep '^[0-9].*wlp15s0' | awk '{print $9}')
 network_wired_icon=󰛳
 network_wireless_icon=
 network_error_icon=

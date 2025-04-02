@@ -107,13 +107,8 @@ if [ "$TERM" != "linux" ]; then
     install_powerline_precmd
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# fzf on Fedora
-if [ -x "$(command -v fzf)"  ]
-then
-        source /usr/share/fzf/shell/key-bindings.zsh
-fi
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -124,4 +119,4 @@ source ~/.profile
 # PATH
 export PATH="$PATH:/home/monk/utils/flutter/bin"
 export PATH="$PATH:/home/monk/.local/bin"
-
+export PATH="$PATH:/home/monk/.scripts"

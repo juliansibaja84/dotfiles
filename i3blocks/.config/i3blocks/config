@@ -11,12 +11,12 @@ separator=false
 separator_block_width=15
 
 [ram]
-command=ram_usage
+command=/home/monk/.scripts/ram_usage
 interval=2
 markup=pango
 
 [network]
-command=network_status
+command=/home/monk/.scripts/network_status
 interval=2
 markup=pango
 
@@ -26,19 +26,19 @@ markup=pango
 # markup=pango
 
 
-[battery]
-command=battery_status
-interval=60
-markup=pango
+#[battery]
+#command=battery_status
+#interval=60
+#markup=pango
 
 [date]
-command=date_formated_pango
+command=/home/monk/.scripts/date_formated_pango
 interval=1
 markup=pango
 
-# [user]
-# command=echo "<span foreground='#db1f48'>$USER</span>"
-# interval=1
-# markup=pango
+[user]
+command=echo "<span foreground='#05fc64'>  $USER</span>"
+interval=1
+markup=pango
 
 

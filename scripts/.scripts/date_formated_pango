@@ -1,0 +1,14 @@
+#!/bin/bash
+date_icon=""
+time_icon=""
+date=$(/usr/bin/date '+%A %b %d')
+date_just_day=$(/usr/bin/date '+%d')
+date_day_hour=$(/usr/bin/date '+%^a %-d %H:%M')
+time=$(/usr/bin/date '+%H:%M')
+
+# echo "$date_icon $date $time_icon $time"
+# echo "$date_just_day $time"
+#echo "<span foreground='#f9e8e0'>$time</span>"
+echo "<span foreground='#f9e8e0'>$date_day_hour</span>"
+exit 0
+

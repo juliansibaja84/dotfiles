@@ -5,7 +5,31 @@
 mon1=eDP-1-1
 mon2=HDMI-1-1
 TMPBG=/tmp/screen.png
+
+# Directory containing the files
+DIR=$HOME/Pictures/renders/locks
 LOCK=$HOME/Pictures/lock.png
+
+# Check if the directory exists
+if [ -d "$DIR" ]; then
+  # Get a list of files in the directory
+  FILES=("$DIR"/*)
+
+  # Check if there are any files in the directory
+  if [ ${#FILES[@]} -eq 1 ] && [ ! -e "${FILES[0]}" ]; then
+    echo "No files found in the directory, using default."
+  else
+
+    # Select a random file
+    LOCK=$(shuf -n1 -e "${FILES[@]}")
+
+    # Print the selected file
+    echo "Randomly selected file: $LOCK"
+  fi
+else
+  echo "Directory does not exist,using default."
+fi
+
 RES=$(xrandr | grep 'current' | sed -E 's/.*current\s([0-9]+)\sx\s([0-9]+).*/\1x\2/')
 # boxblur=5:1,overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2
 
@@ -17,7 +41,7 @@ else
   ffmpeg -f x11grab -video_size $RES -y -i $DISPLAY -i $LOCK -filter_complex "boxblur=3:1,overlay=(1920-overlay_w)/2:(1080-overlay_h)/2" -vframes 1 $TMPBG -loglevel quiet
 fi
 
-i3lock -i $TMPBG -u
+i3lock -i $TMPBG --nofork
 rm $TMPBG
 
 

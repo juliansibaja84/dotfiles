@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Create a directory for the certificates
+CERT_DIR="./certs"
+mkdir -p "$CERT_DIR"
+
+# Prompt for domain name
+read -p "Enter the domain name (e.g., example.com): " DOMAIN
+
+# File paths
+KEY_FILE="$CERT_DIR/$DOMAIN.key"
+CSR_FILE="$CERT_DIR/$DOMAIN.csr"
+CRT_FILE="$CERT_DIR/$DOMAIN.crt"
+
+# Generate a private key
+echo "Generating private key..."
+openssl genrsa -out "$KEY_FILE" 2048
+
+# Generate a Certificate Signing Request (CSR)
+echo "Generating CSR..."
+openssl req -new -key "$KEY_FILE" -out "$CSR_FILE" \
+    -subj "/C=US/ST=State/L=City/O=Organization/OU=Unit/CN=$DOMAIN"
+
+# Generate a self-signed certificate valid for 365 days
+echo "Generating self-signed certificate..."
+openssl x509 -req -days 365 -in "$CSR_FILE" -signkey "$KEY_FILE" -out "$CRT_FILE"
+
+echo "✅ Certificate generation complete!"
+echo "Files created:"
+echo "Private Key : $KEY_FILE"
+echo "Certificate : $CRT_FILE"
+

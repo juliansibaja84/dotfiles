@@ -23,7 +23,8 @@ local plugins = {
     'nvim-telescope/telescope.nvim', tag = '0.1.5',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
-  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}
+  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
+  {"brenoprata10/nvim-highlight-colors"}
 }
 local opts = {}
 
@@ -45,3 +46,8 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 
 require("catppuccin").setup()
 vim.cmd.colorscheme "catppuccin"
+
+-- Ensure termguicolors is enabled if not already
+vim.opt.termguicolors = true
+
+require('nvim-highlight-colors').setup({})

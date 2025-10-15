@@ -44,10 +44,18 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 
 
 
-require("catppuccin").setup()
+require("catppuccin").setup({
+  transparent_background = true,
+})
 vim.cmd.colorscheme "catppuccin"
 
 -- Ensure termguicolors is enabled if not already
 vim.opt.termguicolors = true
 
+
 require('nvim-highlight-colors').setup({})
+
+
+-- extra options
+
+

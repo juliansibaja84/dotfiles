@@ -11,3 +11,6 @@ export PATH="$PATH:/home/monk/utils/flutter/bin"
 # Android Studio
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+
+# Rust
+. "$HOME/.cargo/env"

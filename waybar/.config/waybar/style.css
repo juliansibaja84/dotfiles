@@ -1,0 +1,82 @@
+* {
+    font-family: FontAwesome, Hack Nerd Font Mono, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+}
+
+window#waybar {
+  background-color: rgba(26, 27, 38, 0.85); /* Darker, consistent, semi-transparent */
+  color: #a1a1a1;
+}
+
+#workspaces button {
+  box-shadow: none;
+  text-shadow: none;
+  padding: 0px 4px;
+  margin: 0px 2px;
+  border-radius: 18px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+
+  color: #a1a1a1;
+}
+
+#workspaces button.active {
+  color: #EB5461;
+  border-radius: 18px;
+}
+
+#workspaces button:hover {
+  background: transparent;
+  color: #313244;
+}
+
+/* Power profile styles */
+#power-profiles-daemon.performance {
+    color: #DB5461;
+}
+#power-profiles-daemon.balanced {
+    color: #93B5C6;
+}
+#power-profiles-daemon.power-saver {
+    color: #464f51;
+}
+
+#battery {
+  padding: 5px;
+}
+
+/* Battery critical alert */
+#battery.critical:not(.charging) {
+    color: #DB5461;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+@keyframes blink {
+    to {
+        color: #FFD972;
+    }
+}
+
+/* Muted modules */
+#pulseaudio.muted,
+#wireplumber.muted {
+    color: #464f51;
+}
+
+/* Label focus */
+label:focus {
+    color: #93B5C6;
+}
+
+/* Optional: differentiate some modules with subtle color tweaks */
+#temperature.critical {
+    color: #DB5461;
+}
+#network.disconnected {
+    color: #DB5461;
+}
+
+#custom-separator {
+  padding: 0 5px; /* Add horizontal padding for spacing */
+  color: rgba(219, 84, 97, 1);
+}

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Configuration
+KITTY_CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kitty/sessions"
+SESSION_EXT=".ksession"
+DEFAULT_SESSION="Default Kitty Session:kitty"
+
+# Find all session files
+session_files=("$KITTY_CONF_DIR"/*"$SESSION_EXT")
+
+# Build sessions array starting with default option
+sessions=("$DEFAULT_SESSION")
+for file in "${session_files[@]}"; do
+    session_name=$(basename "$file" "$SESSION_EXT")
+    sessions+=("${session_name}:kitty --session \"$file\"")
+done
+
+# Display menu using wofi
+selected=$(printf "%s\n" "${sessions[@]%%:*}" | \
+    wofi --dmenu \
+         --style ~/.config/wofi/style.css \
+         --prompt "󰄛    introduce kitty session..." \
+         --width 300 \
+         --height 300 \
+         --cache-file /dev/null \
+         --insensitive \
+         --sort-order default)
+
+# Exit if no selection
+[[ -z "$selected" ]] && exit 0
+
+# Execute the selected session
+for session in "${sessions[@]}"; do
+    if [[ "$session" == "$selected:"* ]]; then
+        cmd="${session#*:}"
+        eval "$cmd"
+        exit 0
+    fi
+done
+
+# Fallback notification if something went wrong
+notify-send "Kitty Session Launcher" "Failed to launch: $selected"

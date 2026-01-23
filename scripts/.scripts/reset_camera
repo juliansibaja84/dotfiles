@@ -1,0 +1,28 @@
+#!/bin/bash
+# reset_camera.sh
+
+# Find camera USB device
+CAMERA_DEVICE=$(lsusb | grep "2a0b:00f7" | head -1)
+if [ -z "$CAMERA_DEVICE" ]; then
+    echo "Camera not found"
+    exit 1
+fi
+
+echo "Found camera: $CAMERA_DEVICE"
+
+# Extract bus and device numbers
+BUS=$(echo $CAMERA_DEVICE | awk '{print $2}')
+DEVICE=$(echo $CAMERA_DEVICE | awk '{print $4}' | sed 's/://')
+
+echo "Resetting USB device at bus $BUS, device $DEVICE"
+
+# Reset using usb-devices
+sudo sh -c "echo 0 > /sys/bus/usb/devices/$BUS-$DEVICE/authorized"
+sleep 2
+sudo sh -c "echo 1 > /sys/bus/usb/devices/$BUS-$DEVICE/authorized"
+
+echo "USB reset complete"
+sleep 2
+
+# Verify camera is back
+lsusb | grep "2a0b:00f7" && echo "Camera reset successful" || echo "Camera not detected"

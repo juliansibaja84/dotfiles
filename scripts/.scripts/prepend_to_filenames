@@ -1,0 +1,53 @@
+#!/bin/bash
+
+show_help() {
+    echo "Usage: $0 <string_literal> <path_to_folder>"
+    echo
+    echo "Prepends a string literal followed by an underscore (_) to all file names in the specified folder."
+    echo
+    echo "Arguments:"
+    echo "  <string_literal>   The string to prepend to each filename."
+    echo "  <path_to_folder>   The path to the folder containing files to rename."
+    echo
+    echo "Options:"
+    echo "  -h, --help         Show this help message and exit."
+    echo
+    echo "Example:"
+    echo "  $0 myprefix /home/user/files"
+    echo "  This renames 'file.txt' to 'myprefix_file.txt' inside the given folder."
+}
+
+# Handle help flag
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+# Check if exactly 2 arguments are passed
+if [ "$#" -ne 2 ]; then
+    echo "Error: Invalid number of arguments."
+    echo "Use -h or --help for usage information."
+    exit 1
+fi
+
+prefix="$1"
+folder="$2"
+
+# Check if the folder exists
+if [ ! -d "$folder" ]; then
+    echo "Error: Folder '$folder' does not exist."
+    exit 1
+fi
+
+# Rename files
+for file in "$folder"/*; do
+    if [ -f "$file" ]; then
+        filename=$(basename "$file")
+        dir=$(dirname "$file")
+        newname="${prefix}_${filename}"
+        mv "$file" "$dir/$newname"
+    fi
+done
+
+echo "Renaming complete."
+

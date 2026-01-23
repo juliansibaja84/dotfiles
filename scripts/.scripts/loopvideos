@@ -1,4 +1,15 @@
 #!/bin/bash
+
+# Check if "n" (no-loop) argument is passed
+if [[ "$1" == "n" ]]; then
+    loop_arg="--no-loop-playlist"  # Disable looping
+else
+    loop_arg="--loop-playlist=inf" # Default: loop infinitely
+fi
+
+# Generate playlist
 list=$(ls)
-echo $list | tr " " "\n" | grep -v "playlist.pl" > playlist.pl
-mpv --loop=inf --playlist=playlist.pl
+echo "$list" | tr " " "\n" | grep -v "playlist.pl" > playlist.pl
+
+# Play with selected loop behavior
+mpv $loop_arg --playlist=playlist.pl --autofit-larger=1920x1000 --osd-bar #-no-osc --osd-bar

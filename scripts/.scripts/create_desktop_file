@@ -1,0 +1,351 @@
+#!/bin/bash
+
+# Function to display help information
+show_help() {
+    cat << EOF
+DESCRIPTION:
+    Generate a .desktop file for launching applications in Linux desktop environments.
+
+USAGE:
+    $(basename "$0") [OPTIONS] <application-path> [icon-path]
+
+OPTIONS:
+    -h, --help      Display this help message and exit
+    -m, --move      Move the generated .desktop file to ~/.local/share/applications/
+                    (by default, creates it in the current directory)
+    <application-path>  Path to the application executable (required)
+                      Can be absolute path, relative path, or command in PATH
+    [icon-path]     Optional path to the application icon/image
+                      Can be absolute path, relative path, or icon name
+
+EXAMPLES:
+    $(basename "$0") /usr/bin/myapp
+    $(basename "$0") ./myscript.sh
+    $(basename "$0") ../tools/myapp
+    $(basename "$0") myapp                    # Looks for 'myapp' in PATH
+    $(basename "$0") -m ~/Apps/myapp.sh
+    $(basename "$0") /usr/bin/myapp /usr/share/icons/myapp.png
+    $(basename "$0") -m ./myapp ../icons/icon.png
+    $(basename "$0") -h
+
+The script will prompt for:
+    1. Name of the desktop entry (optional, defaults to application filename without extension)
+    2. Description of the application (optional)
+
+By default, the .desktop file is created in the current directory.
+Use the -m or --move option to automatically move it to ~/.local/share/applications/
+
+Note: If a relative path is provided for the application, it will be converted to an absolute path.
+EOF
+    exit "${1:-0}"
+}
+
+# Function to handle errors
+handle_error() {
+    echo "Error: $1" >&2
+    echo ""
+    show_help 1
+}
+
+# Function to resolve a path to absolute path
+resolve_path() {
+    local path="$1"
+    
+    # If it's already an absolute path, return as is
+    if [[ "$path" =~ ^/ ]]; then
+        echo "$path"
+        return 0
+    fi
+    
+    # Check if it's in PATH
+    if command -v "$path" >/dev/null 2>&1; then
+        command -v "$path"
+        return 0
+    fi
+    
+    # Check if it's a relative path that exists
+    if [[ -f "./$path" ]] || [[ -x "./$path" ]]; then
+        realpath "./$path"
+        return 0
+    fi
+    
+    # Try with current directory prefix
+    local current_dir_path="./$path"
+    if [[ -f "$current_dir_path" ]] || [[ -x "$current_dir_path" ]]; then
+        realpath "$current_dir_path"
+        return 0
+    fi
+    
+    # Return the original path (will trigger warning later)
+    echo "$path"
+    return 1
+}
+
+# Function to resolve icon path
+resolve_icon_path() {
+    local icon_path="$1"
+    
+    # If empty, return empty
+    if [[ -z "$icon_path" ]]; then
+        echo ""
+        return 0
+    fi
+    
+    # If it's already an absolute path and exists, return as is
+    if [[ "$icon_path" =~ ^/ ]] && [[ -f "$icon_path" ]]; then
+        echo "$icon_path"
+        return 0
+    fi
+    
+    # Check if it's a standard icon name (without path)
+    if [[ ! "$icon_path" =~ / ]] && [[ ! "$icon_path" =~ \. ]]; then
+        # It might be an icon name, check common icon directories
+        local common_dirs=(
+            "/usr/share/icons"
+            "/usr/share/pixmaps"
+            "$HOME/.local/share/icons"
+            "$HOME/.icons"
+        )
+        
+        for dir in "${common_dirs[@]}"; do
+            if [[ -d "$dir" ]]; then
+                # Look for the icon with common extensions
+                for ext in png svg xpm ico; do
+                    if [[ -f "$dir/hicolor/48x48/apps/$icon_path.$ext" ]]; then
+                        echo "$icon_path"
+                        return 0
+                    elif [[ -f "$dir/$icon_path.$ext" ]]; then
+                        echo "$icon_path"
+                        return 0
+                    fi
+                done
+            fi
+        done
+        
+        # If we get here and it doesn't contain dots or slashes, assume it's an icon name
+        echo "$icon_path"
+        return 0
+    fi
+    
+    # Try as relative path from current directory
+    if [[ -f "./$icon_path" ]]; then
+        realpath "./$icon_path"
+        return 0
+    fi
+    
+    # Try with current directory prefix
+    local current_dir_path="./$icon_path"
+    if [[ -f "$current_dir_path" ]]; then
+        realpath "$current_dir_path"
+        return 0
+    fi
+    
+    # Return the original path (will trigger warning later)
+    echo "$icon_path"
+    return 1
+}
+
+# Initialize variables
+MOVE_TO_APPLICATIONS=false
+APP_PATH=""
+ICON_PATH=""
+
+# Parse command line options
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_help 0
+            ;;
+        -m|--move)
+            MOVE_TO_APPLICATIONS=true
+            shift
+            ;;
+        -*)
+            handle_error "Unknown option: $1"
+            ;;
+        *)
+            # First non-option argument is application path
+            if [[ -z "$APP_PATH" ]]; then
+                APP_PATH="$1"
+            # Second non-option argument is icon path
+            elif [[ -z "$ICON_PATH" ]]; then
+                ICON_PATH="$1"
+            else
+                handle_error "Too many arguments"
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Validate application path
+if [[ -z "$APP_PATH" ]]; then
+    handle_error "Application path is required"
+fi
+
+# Resolve application path
+RESOLVED_APP_PATH=$(resolve_path "$APP_PATH")
+if [[ $? -ne 0 ]] || [[ -z "$RESOLVED_APP_PATH" ]]; then
+    echo "Warning: Could not resolve application path: $APP_PATH" >&2
+    echo "The path will be used as provided in the .desktop file." >&2
+    RESOLVED_APP_PATH="$APP_PATH"
+fi
+
+# Check if resolved application exists and is executable
+if [[ "$RESOLVED_APP_PATH" != "$APP_PATH" ]] && [[ -f "$RESOLVED_APP_PATH" ]]; then
+    if [[ ! -x "$RESOLVED_APP_PATH" ]]; then
+        echo "Warning: Application '$RESOLVED_APP_PATH' is not executable" >&2
+        echo "Do you want to continue anyway? (y/N): "
+        read -r continue_anyway
+        if [[ ! "$continue_anyway" =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+else
+    # For unresolved paths or commands in PATH
+    if [[ "$RESOLVED_APP_PATH" = "$APP_PATH" ]] && [[ ! "$APP_PATH" =~ ^/ ]]; then
+        echo "Note: Using '$APP_PATH' as provided (not an absolute path)" >&2
+        echo "This will work if the application is in PATH or the path is relative to the desktop file location." >&2
+        echo "Do you want to continue? (Y/n): "
+        read -r continue_anyway
+        if [[ "$continue_anyway" =~ ^[Nn]$ ]]; then
+            exit 1
+        fi
+    fi
+fi
+
+# Resolve icon path
+if [[ -n "$ICON_PATH" ]]; then
+    RESOLVED_ICON_PATH=$(resolve_icon_path "$ICON_PATH")
+    if [[ $? -ne 0 ]] || [[ -z "$RESOLVED_ICON_PATH" ]]; then
+        echo "Warning: Could not resolve icon path: $ICON_PATH" >&2
+        echo "Do you want to continue without an icon? (y/N): "
+        read -r continue_without_icon
+        if [[ ! "$continue_without_icon" =~ ^[Yy]$ ]]; then
+            exit 1
+        else
+            RESOLVED_ICON_PATH=""
+        fi
+    fi
+else
+    RESOLVED_ICON_PATH=""
+fi
+
+# Extract application filename without extension for default name
+APP_FILENAME=$(basename "$APP_PATH")
+APP_NAME_DEFAULT="${APP_FILENAME%.*}"
+
+# Prompt for desktop entry name
+echo "Enter name for desktop entry [$APP_NAME_DEFAULT]: "
+read -r DESKTOP_NAME
+DESKTOP_NAME="${DESKTOP_NAME:-$APP_NAME_DEFAULT}"
+
+# Prompt for description
+echo "Enter description (optional): "
+read -r DESCRIPTION
+
+# Generate desktop filename (replace spaces with hyphens and remove special chars)
+SAFE_NAME=$(echo "$DESKTOP_NAME" | sed 's/[^a-zA-Z0-9._-]/-/g')
+DESKTOP_FILENAME="${SAFE_NAME}.desktop"
+
+# Determine where to save the file
+if [[ "$MOVE_TO_APPLICATIONS" == true ]]; then
+    SAVE_DIR="$HOME/.local/share/applications"
+    mkdir -p "$SAVE_DIR"
+    SAVE_PATH="$SAVE_DIR/$DESKTOP_FILENAME"
+    
+    # Check if file already exists in applications directory
+    if [[ -f "$SAVE_PATH" ]]; then
+        echo "Warning: A desktop file with this name already exists in $SAVE_DIR"
+        echo "Do you want to overwrite it? (y/N): "
+        read -r overwrite
+        if [[ ! "$overwrite" =~ ^[Yy]$ ]]; then
+            echo "Please choose a different name or run without -m option."
+            exit 1
+        fi
+    fi
+else
+    # Save in current directory
+    SAVE_PATH="./$DESKTOP_FILENAME"
+    
+    # Check if file already exists in current directory
+    if [[ -f "$SAVE_PATH" ]]; then
+        echo "Warning: A file named '$DESKTOP_FILENAME' already exists in the current directory."
+        echo "Do you want to overwrite it? (y/N): "
+        read -r overwrite
+        if [[ ! "$overwrite" =~ ^[Yy]$ ]]; then
+            echo "Please choose a different name or move to a different directory."
+            exit 1
+        fi
+    fi
+fi
+
+# Generate the .desktop file content
+cat > "$SAVE_PATH" << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=$DESKTOP_NAME
+EOF
+
+# Add GenericName if provided
+if [[ -n "$DESKTOP_NAME" ]]; then
+    echo "GenericName=$DESKTOP_NAME" >> "$SAVE_PATH"
+fi
+
+# Add description if provided
+if [[ -n "$DESCRIPTION" ]]; then
+    echo "Comment=$DESCRIPTION" >> "$SAVE_PATH"
+fi
+
+# Continue with the rest of the file
+cat >> "$SAVE_PATH" << EOF
+Exec=$RESOLVED_APP_PATH
+Terminal=false
+EOF
+
+# Add icon if provided
+if [[ -n "$RESOLVED_ICON_PATH" ]]; then
+    echo "Icon=$RESOLVED_ICON_PATH" >> "$SAVE_PATH"
+fi
+
+# Add generic categories (can be customized if needed)
+cat >> "$SAVE_PATH" << EOF
+Categories=Utility;Application;
+StartupNotify=true
+EOF
+
+# Make the .desktop file executable (some desktop environments require this)
+chmod +x "$SAVE_PATH"
+
+echo ""
+echo "Desktop file created successfully: $SAVE_PATH"
+echo "Application path used: $RESOLVED_APP_PATH"
+if [[ -n "$RESOLVED_ICON_PATH" ]]; then
+    echo "Icon path used: $RESOLVED_ICON_PATH"
+fi
+echo ""
+
+# Additional instructions if moved to applications directory
+if [[ "$MOVE_TO_APPLICATIONS" == true ]]; then
+    echo "The application should appear in your application menu after:"
+    echo "1. Logging out and logging back in, OR"
+    echo "2. Running the command: update-desktop-database $SAVE_DIR"
+    echo ""
+    echo "You can also launch it from the terminal with:"
+    echo "  gtk-launch $SAFE_NAME"
+else
+    echo "To install this desktop file, you can:"
+    echo "1. Move it to ~/.local/share/applications/"
+    echo "2. Or run this script again with the -m option"
+    echo ""
+    echo "To test it immediately:"
+    if [[ -f "$SAVE_PATH" ]]; then
+        echo "  gtk-launch $(realpath "$SAVE_PATH" 2>/dev/null || echo "$SAVE_PATH")"
+    fi
+fi
+
+echo ""
+echo "Desktop file content:"
+echo "===================="
+cat "$SAVE_PATH"

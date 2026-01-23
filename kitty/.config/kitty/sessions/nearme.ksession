@@ -1,0 +1,23 @@
+# Frontend: Run
+new_tab frontend
+cd /home/monk/projects/jaware/ExpoNearme
+launch . /home/monk/.profile
+launch --hold npm run start
+
+# Backend: Run
+new_tab backend
+cd /home/monk/projects/jaware/nearme_backend
+launch podman start postgres-near-me
+launch --hold npm run dev:watch
+
+# Backend: Code
+new_tab backend_code
+cd /home/monk/projects/jaware/nearme_backend
+launch zsh
+
+# Frontend: Code
+new_tab frontend_code
+cd /home/monk/projects/jaware/ExpoNearme
+launch zsh
+
+

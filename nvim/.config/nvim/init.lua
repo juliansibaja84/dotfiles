@@ -24,7 +24,8 @@ local plugins = {
     'nvim-telescope/telescope.nvim', tag = '0.1.5',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
-  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}
+  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
+  {"brenoprata10/nvim-highlight-colors"}
 }
 local opts = {}
 
@@ -33,7 +34,7 @@ require("lazy").setup(plugins, opts)
 local configs = require("nvim-treesitter.configs")
 
 configs.setup({
-  ensure_installed = { "c", "lua", "python", "vim", "vimdoc", "query", "javascript", "html" },
+  ensure_installed = { "c", "lua", "python", "vim", "vimdoc", "query", "javascript", "html","zig" },
   highlight = { enable = true },
   indent = { enable = true },  
 })
@@ -44,5 +45,18 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 
 
 
-require("catppuccin").setup()
+require("catppuccin").setup({
+  transparent_background = true,
+})
 vim.cmd.colorscheme "catppuccin"
+
+-- Ensure termguicolors is enabled if not already
+vim.opt.termguicolors = true
+
+
+require('nvim-highlight-colors').setup({})
+
+
+-- extra options
+
+

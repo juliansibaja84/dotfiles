@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Options
+options="⏻ Shutdown\n Reboot\n󰍃 Logout\n󰤄 Lock\n󰗽 Cancel"
+
+# Show menu with wofi
+selected=$(echo -e "$options" | wofi --dmenu --cache-file /dev/null --prompt "Session")
+
+case "$selected" in
+    *Shutdown)
+        systemctl poweroff
+        ;;
+    *Reboot)
+        systemctl reboot
+        ;;
+    *Logout)
+        # Use hyprctl for Hyprland logout
+        hyprctl dispatch exit
+        ;;
+    *Lock)
+        # Replace with your lock command (e.g., swaylock, gtklock, etc.)
+        gtklock
+        ;;
+    *Cancel|*)
+        exit 0
+        ;;
+esac
+

@@ -91,7 +91,7 @@ alias ssh="kitty +kitten ssh"
 alias get_idf='. $HOME/esp/esp-idf/export.sh'
 
 function powerline_precmd() {
-    PS1="$(powerline-shell --shell zsh $?)"
+    PS1="$(/home/monk/utils/powerline-shell/.venv/bin/powerline-shell --shell zsh $?)"
 }
 
 function install_powerline_precmd() {
@@ -117,6 +117,9 @@ export NVM_DIR="$HOME/.nvm"
 source ~/.profile
 
 # PATH
-export PATH="$PATH:/home/monk/utils/flutter/bin"
 export PATH="$PATH:/home/monk/.local/bin"
 export PATH="$PATH:/home/monk/.scripts"
+
+# XDG_DATA_DIRS
+export XDG_DATA_DIRS="$HOME/.local/share:/usr/local/share:/usr/share"
+

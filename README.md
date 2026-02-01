@@ -1,7 +1,14 @@
 # Dotfiles
 This are dotfiles... duh.
 
+## Dependencies for i3
+- kitty: terminal
+
+Run:
+    xrdb --merge ~/.Xresources
+
 ## Dependencies for hyprland
+- kitty: terminal
 - eza: better ls
 - hyprpaper: for the wallpapers
 - waybar: for the bar

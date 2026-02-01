@@ -6,6 +6,8 @@ This are dotfiles... duh.
 - hyprpaper: for the wallpapers
 - waybar: for the bar
 - dunst: for the ...
+- wl-clipboard: for copying things
+- cliphist: to see clipboard changes
 
 This are only some of them, I don't find the time to put them here
 

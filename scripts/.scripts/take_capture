@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Options for screenshot menu
+options="📋 Region → Clipboard\n📋 Entire Screen → Clipboard\n💾 Region → File\n💾 Entire Screen → File\n🎨 Color Picker → Clipboard\n❌ Cancel"
+
+# Show menu with wofi
+selected=$(echo -e "$options" | wofi --dmenu --cache-file /dev/null --prompt "Capture")
+
+# Generate timestamp for filename
+timestamp=$(date +"%Y_%m_%d-%H_%M_%S")
+
+# Default screenshot directory
+SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SCREENSHOT_DIR"
+
+case "$selected" in
+    # Region to clipboard
+    *Region*Clipboard*)
+        wayshot --clipboard --geometry
+        ;;
+    
+    # Entire screen to clipboard
+    *Entire*Screen*Clipboard*)
+        wayshot --clipboard
+        ;;
+    
+    # Region to file
+    *Region*File*)
+        save_path="$SCREENSHOT_DIR/region_${timestamp}.png"
+        wayshot --geometry "$save_path"
+        notify-send "Screenshot Saved" "Region saved to $(basename "$save_path")"
+        ;;
+    
+    # Entire screen to file
+    *Entire*Screen*File*)
+        save_path="$SCREENSHOT_DIR/screen_${timestamp}.png"
+        wayshot "$save_path"
+        notify-send "Screenshot Saved" "Screen saved to $(basename "$save_path")"
+        ;;
+    
+    # Color picker to clipboard
+    *Color*Picker*Clipboard*)
+        # This will show a crosshair to pick a color
+        color=$(wayshot --color)
+        if [ -n "$color" ]; then
+            echo -n "$color" | wl-copy
+            notify-send "Color Copied" "Color $color copied to clipboard"
+        fi
+        ;;
+    
+    # Cancel or any other option
+    *Cancel*|*)
+        exit 0
+        ;;
+esac

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Cliphist Wofi Interface
+# Bind to a keyboard shortcut like: SUPER+V
+
+# Configuration
+
+# Get user selection for action
+action=$(echo -e "📋 Paste Item\n󰆴 Delete Item\n🧹 Clear All\n📝 Manual Delete" | wofi --dmenu --cache=/dev/null $WOFI_ARGS)
+
+case $action in
+    "📋 Paste Item")
+        # Select and copy to clipboard
+        selected=$(cliphist list | wofi --dmenu --cache=/dev/null --prompt="Select to copy")
+        if [ -n "$selected" ]; then
+            echo "$selected" | cliphist decode | wl-copy
+            notify-send "Clipboard" "Item copied to clipboard" -t 2000
+        fi
+        ;;
+    
+    "󰆴 Delete Item")
+        # Select and delete item
+        selected=$(cliphist list | wofi --dmenu --cache=/dev/null --prompt="Select to delete")
+        if [ -n "$selected" ]; then
+            echo "$selected" | cliphist delete
+            notify-send "Clipboard" "Item deleted from history" -t 2000
+        fi
+        ;;
+    
+    "🧹 Clear All")
+        # Confirm before clearing all
+        confirm=$(echo -e "No\nYes" | wofi --dmenu --cache=/dev/null --prompt="Clear ALL history?")
+        if [ "$confirm" = "Yes" ]; then
+            cliphist wipe
+            notify-send "Clipboard" "All history cleared" -t 2000
+        fi
+        ;;
+    
+    "📝 Manual Delete")
+        # Manual delete query
+        query=$(echo "" | wofi --dmenu --cache=/dev/null --prompt="Search text to delete")
+        if [ -n "$query" ]; then
+            cliphist delete-query "$query"
+            notify-send "Clipboard" "Items matching '$query' deleted" -t 2000
+        fi
+        ;;
+esac

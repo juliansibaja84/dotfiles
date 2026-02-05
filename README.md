@@ -15,7 +15,8 @@ Run:
 - dunst: for the ...
 - wl-clipboard: for copying things
 - cliphist: to see clipboard changes
-
+- ranger: as file manager
+- python-pillow:to show images in ranger
 This are only some of them, I don't find the time to put them here
 
 Note: for the icons you need something like nerd fonts or font awesome

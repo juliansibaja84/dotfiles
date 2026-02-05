@@ -2,13 +2,13 @@
 # iget the correct actual monitor names with
 # xrandr | awk ' /connected/ { print $1, $2 }'
 
-mon1=HDMI-A-1-1
-mon2=HDMI-A-0
+mon1=DP-3
+mon2=HDMI-1
 
 # Uncomment the sleep command, if you face problems, as a possible workaround
 # sleep 3
 if xrandr | grep "$mon2 disconnected"; then
-  xrandr --output "$mon1" --primary --mode 1920x1080 --pos 0x0 --rotate normal
+  xrandr --output "$mon1" --primary --mode 3440x1440 --pos 0x0 --rotate normal
 else
   xrandr --output "$mon2" --mode 1920x1080 --pos 1920x0 --rotate normal --output "$mon1" --primary --mode 1920x1080 --pos 0x0 --rotate normal
 fi

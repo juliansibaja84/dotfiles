@@ -31,7 +31,7 @@ local opts = {}
 
 require("lazy").setup(plugins, opts)
 
-local configs = require("nvim-treesitter.configs")
+local configs = require("nvim-treesitter.config")
 
 configs.setup({
   ensure_installed = { "c", "lua", "python", "vim", "vimdoc", "query", "javascript", "html","zig" },

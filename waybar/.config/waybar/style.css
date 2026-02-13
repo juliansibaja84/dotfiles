@@ -4,7 +4,7 @@
 }
 
 window#waybar {
-  background-color: rgba(26, 27, 38, 0.85); /* Darker, consistent, semi-transparent */
+  background-color: rgba(15, 15, 23, 0.85); /* Darker, consistent, semi-transparent */
   color: #a1a1a1;
 }
 

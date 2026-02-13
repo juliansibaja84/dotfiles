@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Options for screenshot menu
-options="📋 Region → Clipboard\n📋 Entire Screen → Clipboard\n💾 Region → File\n💾 Entire Screen → File\n🎨 Color Picker → Clipboard\n❌ Cancel"
+options="Region → Clipboard\nEntire Screen → Clipboard\nRegion → File\nEntire Screen → File\nColor Picker → Clipboard\nCancel"
 
 # Show menu with wofi
 selected=$(echo -e "$options" | wofi --dmenu --cache-file /dev/null --prompt "Capture")

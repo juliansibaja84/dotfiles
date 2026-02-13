@@ -1,57 +1,71 @@
-/**
-* Semi-Transparent Dark Blue Theme
-* Designed for GNOME/Wayland compatibility
-*/
+/* ===== Global ===== */
+* {
+    font-family: "Hack Nerd Font", monospace;
+    font-size: 14px;
+}
 
+/* ===== Window ===== */
 window {
-    margin: 0;
-    border: 1px solid rgba(42, 58, 74, 0.8);
-    border-radius: 12px;
-    background-color: rgba(26, 35, 46, 0.95);  /* 88% opacity */
-    opacity: 0.98;  /* GNOME-specific workaround */
-}
-
-#input {
-    margin: 15px;
-    padding: 10px;
+    margin: 0px;
     border: none;
-    border-radius: 6px;
-    color: #d8e1eb;
-    background-color: rgba(42, 58, 74, 0.7);
-    font-size: 16px;
+    border-radius: 0px;
+    background-color: rgba(15, 15, 23, 0.75); /* transparent ultra-dark */
 }
 
-#inner-box {
-    margin: 0;
+/* ===== Outer Box ===== */
+#outer-box {
+    margin: 12px;
+    padding: 12px;
     background-color: transparent;
 }
 
+/* ===== Input Bar ===== */
+#input {
+    margin: 5px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 0px;
+    background-color: rgba(42, 39, 69, 0.65); /* darker accent */
+    color: rgba(230, 230, 240, 0.95);
+}
+
+#input:focus {
+    outline: none;
+    background-color: rgba(42, 39, 69, 0.8);
+}
+
+/* ===== Scroll ===== */
+#scroll {
+    margin: 5px;
+    background-color: transparent;
+}
+
+/* ===== Entries ===== */
 #entry {
-    padding: 8px 15px;
-    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 0px;
+    border-radius: 0px;
     background-color: transparent;
-    transition: all 0.2s ease;
+    color: rgba(220, 220, 230, 0.9);
 }
 
+/* ===== Hover ===== */
+#entry:hover {
+    background-color: rgba(65, 60, 105, 0.25);
+}
+
+/* ===== Selected ===== */
 #entry:selected {
-    background-color: rgba(42, 58, 74, 0.6);
-    border: 1px solid rgba(58, 75, 92, 0.5);
+    background-color: rgba(65, 60, 105, 0.75); /* #413c69 transparent */
+    color: #ffffff;
 }
 
+/* ===== Text & Icons ===== */
 #text {
-    color: rgba(192, 202, 213, 0.9);
-    margin: 0 5px;
+    margin: 0px 6px;
 }
 
-#text:selected {
-    color: rgba(230, 240, 255, 0.95);
+#img {
+    margin-right: 8px;
 }
 
-/* Blur effect (works on GNOME 42+) */
-@supports (-moz-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px)) {
-    window {
-        background-color: rgba(26, 35, 46, 0.65);
-        -moz-backdrop-filter: blur(12px);
-        backdrop-filter: blur(12px);
-    }
-}

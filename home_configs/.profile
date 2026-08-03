@@ -1,3 +1,6 @@
+# Force HIP/ROCm frameworks to treat your gfx1032 as a standard gfx1030
+export HSA_OVERRIDE_GFX_VERSION=10.3.0
+
 # PATH
 export PATH="$PATH:/home/monk/.local/bin"
 export PATH="$PATH:/home/monk/.scripts"

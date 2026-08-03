@@ -1,5 +1,12 @@
 #! /bin/zsh	
 
+export ZSH="$HOME/.oh-my-zsh"
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+ZSH_THEME="monk-bureau"
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
 # Enable persistent history
 HISTFILE=~/.zsh_history
 HISTSIZE=100000

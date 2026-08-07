@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Default destination directory
+DEFAULT_DEST="$HOME/.local/share/applications"
+
+# Function to display usage instructions
+usage() {
+    echo "Usage: $0 -n <name> -e <executable_path> -i <icon_path> [-d <destination_dir>]"
+    echo "  -n  Name of the application (e.g., 'My App')"
+    echo "  -e  Path to the executable (absolute or relative)"
+    echo "  -i  Path to the icon/image (absolute or relative)"
+    echo "  -d  Optional: Destination directory (Defaults to: $DEFAULT_DEST)"
+    exit 1
+}
+
+# Parse command-line arguments (FIXED: removed spaces around ${opt})
+while getopts "n:e:i:d:" opt; do
+    case "${opt}" in
+        n) APP_NAME="${OPTARG}" ;;
+        e) EXEC_INPUT="${OPTARG}" ;;
+        i) ICON_INPUT="${OPTARG}" ;;
+        d) DEST_DIR="${OPTARG}" ;;
+        *) usage ;;
+    esac
+done
+
+# Validate required arguments
+if [ -z "$APP_NAME" ] || [ -z "$EXEC_INPUT" ] || [ -z "$ICON_INPUT" ]; then
+    echo "Error: Missing required arguments."
+    usage
+fi
+
+# Convert paths to absolute paths using 'realpath'
+if ! EXEC_PATH=$(realpath -e "$EXEC_INPUT" 2>/dev/null); then
+    echo "Error: Executable path '$EXEC_INPUT' could not be found from $(pwd)."
+    exit 1
+fi
+
+if ! ICON_PATH=$(realpath -e "$ICON_INPUT" 2>/dev/null); then
+    echo "Error: Icon path '$ICON_INPUT' could not be found from $(pwd)."
+    exit 1
+fi
+
+# Set destination to default if not provided, and resolve its absolute path too
+DEST_DIR="${DEST_DIR:-$DEFAULT_DEST}"
+mkdir -p "$DEST_DIR"
+DEST_DIR=$(realpath "$DEST_DIR")
+
+# Sanitize application name for the filename (lowercase, replace spaces with hyphens)
+FILE_NAME=$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+DESKTOP_FILE="$DEST_DIR/$FILE_NAME.desktop"
+
+# Create the .desktop file
+cat << EOF > "$DESKTOP_FILE"
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=$APP_NAME
+Exec=$EXEC_PATH
+Icon=$ICON_PATH
+Terminal=false
+Categories=Utility;Development;
+EOF
+
+# Make the .desktop file executable
+chmod +x "$DESKTOP_FILE"
+
+echo "Success! Desktop entry created at: $DESKTOP_FILE"
